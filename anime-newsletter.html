@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漫畫總編電子報 — 編集長の部屋</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --card: #13131c;
+  --card2: #1a1a2e;
+  --border: #2a2a3e;
+  --text: #e0dcd0;
+  --muted: #8b8792;
+  --accent: #f0c040;
+  --accent2: #e8553a;
+  --link: #7ab8ff;
+  --heading-font: 'Georgia', 'Noto Serif CJK SC', 'Noto Serif SC', serif;
+  --body-font: -apple-system, 'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang TC', 'Microsoft YaHei', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body-font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(240,192,64,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(232,85,58,0.03) 0%, transparent 60%);
+  min-height: 100vh;
+}
+.masthead {
+  text-align: center;
+  padding: 60px 20px 30px;
+  position: relative;
+}
+.masthead::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  margin: 20px auto 0;
+  border-radius: 2px;
+}
+.masthead h1 {
+  font-family: var(--heading-font);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.masthead .subtitle {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+.masthead .badge {
+  display: inline-block;
+  background: rgba(240,192,64,0.12);
+  border: 1px solid rgba(240,192,64,0.25);
+  color: var(--accent);
+  font-size: 0.72rem;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-top: 12px;
+  letter-spacing: 0.08em;
+}
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 20px 16px 30px;
+  flex-wrap: wrap;
+}
+.nav-bar a {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all .2s;
+}
+.nav-bar a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(240,192,64,0.06);
+}
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.issue {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.issue:hover {
+  border-color: rgba(240,192,64,0.25);
+}
+.issue-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.issue-header h2 {
+  font-family: var(--heading-font);
+  font-size: 1.05rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.issue-header .issue-meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.issue-header .toggle-icon {
+  color: var(--muted);
+  font-size: 0.8rem;
+  transition: transform .3s;
+}
+.issue.open .toggle-icon {
+  transform: rotate(180deg);
+}
+.issue-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .5s ease;
+}
+.issue.open .issue-body {
+  max-height: none;
+}
+.issue-content {
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.section-label {
+  font-family: var(--heading-font);
+  font-size: 0.85rem;
+  color: var(--accent2);
+  margin: 18px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(232,85,58,0.15);
+  letter-spacing: 0.04em;
+}
+.section-label:first-child { margin-top: 0; }
+.news-item {
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.news-item .tag {
+  flex-shrink: 0;
+  display: inline-block;
+  padding: 1px 8px;
+  font-size: 0.65rem;
+  border-radius: 3px;
+  color: #fff;
+  margin-top: 3px;
+  height: fit-content;
+}
+.tag-headline { background: var(--accent2); }
+.tag-seasonal { background: #3b82f6; }
+.tag-manga { background: #22c55e; }
+.tag-movie { background: #a855f7; }
+.tag-rank { background: var(--accent); color: #1a1a2e !important; }
+.tag-murmur { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.news-item a { color: var(--link); text-decoration: none; }
+.news-item a:hover { text-decoration: underline; }
+.news-item .summary { color: var(--text); flex: 1; }
+.news-item .summary .comment {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+.editor-note {
+  background: rgba(240,192,64,0.04);
+  border: 1px solid rgba(240,192,64,0.12);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 16px 0 8px;
+  font-size: 0.82rem;
+  line-height: 1.8;
+}
+.editor-note .note-label {
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+.placeholder .jp {
+  font-family: var(--heading-font);
+  font-size: 1.2rem;
+  color: rgba(240,192,64,0.15);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.placeholder .desc { font-size: 0.82rem; color: rgba(139,135,146,0.6); }
+.page-footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+.page-footer .disclaimer {
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.page-footer .disclaimer a { color: var(--link); text-decoration: none; }
+.page-footer .disclaimer a:hover { text-decoration: underline; }
+@media (max-width: 600px) {
+  .masthead { padding: 40px 16px 20px; }
+  .issue-header { padding: 14px 16px; flex-wrap: wrap; gap: 6px; }
+  .issue-content { padding: 0 16px 16px; padding-top: 14px; }
+  .issue-header h2 { font-size: 0.92rem; }
+  .nav-bar a { font-size: 0.72rem; padding: 4px 10px; }
+  .news-item { font-size: 0.78rem; flex-direction: column; gap: 2px; }
+  .news-item .tag { width: fit-content; }
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <h1>✎ 漫畫總編電子報</h1>
+  <p class="subtitle">— 編集長の部屋 —</p>
+  <span class="badge">隔日發行 · 總編: 旺財</span>
+</header>
+<nav class="nav-bar">
+  <a href="#issue-latest">最新號</a>
+  <a href="#issue-archive">過刊目錄</a>
+</nav>
+<div class="container">
+  <div class="issue open" id="issue-latest">
+    <div class="issue-header" onclick="toggleIssue(this.parentElement)">
+      <div>
+        <h2>第 1 號 — 創刊号</h2>
+        <div class="issue-meta">2026/06/15 · 編集予定</div>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="issue-body">
+      <div class="issue-content">
+        <div class="placeholder">
+          <div class="jp">只今準備中</div>
+          <div class="desc">第一期將於明日 6/15 上午正式發刊。敬請期待。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="issue-archive" style="margin-bottom:16px">
+    <div style="font-family:var(--heading-font);font-size:0.85rem;color:var(--muted);letter-spacing:0.06em;margin-bottom:12px;padding:0 4px">— 過刊目錄 —</div>
+  </div>
+  <div class="issue" data-issue="0" style="display:none" id="issue-template">
+    <div class="issue-header" onclick="toggleIssue(this.parentElement)">
+      <div><h2>第 0 號</h2><div class="issue-meta">YYYY/MM/DD</div></div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="issue-body">
+      <div class="issue-content"></div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:20px 0">
+    <div style="font-family:var(--heading-font);font-size:0.72rem;color:var(--muted);letter-spacing:0.1em">
+      ⌨ 編集長が毎回心を込めてお届けします
+    </div>
+  </div>
+</div>
+<footer class="page-footer">
+  <div class="disclaimer">
+    本電子報內容為個人興趣整理，引用自各動漫新聞網站之公開資訊。<br>
+    每篇新聞均附原文連結，摘要僅供參考。<br>
+    如有版權疑慮請 <a href="https://github.com/jgy9757">聯絡站長</a>。<br><br>
+    情報來源：<a href="https://gnn.gamer.com.tw/">巴哈姆特 GNN</a> ·
+    <a href="https://www.animenewsnetwork.com/">Anime News Network</a> ·
+    <a href="https://myanimelist.net/news">MyAnimeList</a> ·
+    <a href="https://www.oricon.co.jp/entertainment/anime/">ORICON アニメ</a>
+  </div>
+</footer>
+<script>
+function toggleIssue(el) {
+  el.classList.toggle('open');
+  const icon = el.querySelector('.toggle-icon');
+  const body = el.querySelector('.issue-body');
+  if (el.classList.contains('open')) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  } else {
+    body.style.maxHeight = '0';
+  }
+}
+</script>
+</body>
+</html>
